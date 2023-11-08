@@ -1,12 +1,13 @@
 const socket = new WebSocket("ws://localhost:3000/ws");
 
-const connect = () => {
-  console.log("Attempting Connection...");
+const connect = (cb: (msg: MessageEvent) => void) => {
+  console.log("connecting");
   socket.onopen = () => {
     console.log("Successfully Connected");
   };
   socket.onmessage = (msg) => {
     console.log(msg);
+    cb(msg);
   };
   socket.onclose = (event) => {
     console.log("Socket Closed Connection: ", event);

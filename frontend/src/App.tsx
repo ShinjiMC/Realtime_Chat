@@ -1,36 +1,31 @@
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import { useEffect, useState } from "react";
 import "./App.css";
 import { connect, sendMsg } from "./api";
+import ChatHistory from "./components/chatHistory";
+import Header from "./components/header";
 
 function App() {
-  connect();
+  const [chatHistory, setChatHistory] = useState<{ data: string }[]>([]);
+
   const send = () => {
     console.log("hello");
     sendMsg("hello");
   };
 
+  useEffect(() => {
+    const handleMessage = (msg: { data: string }) => {
+      console.log("New Message");
+      setChatHistory((prevChatHistory) => [...prevChatHistory, msg]);
+    };
+    connect(handleMessage);
+  }, []);
+
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={send}>Hit</button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="App">
+      <Header />
+      <ChatHistory chatHistory={chatHistory} />
+      <button onClick={send}>Hit</button>
+    </div>
   );
 }
 
